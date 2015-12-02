@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>This object is used to store the Lookup relationships to external objects that are related to the Sub-Project like the Laser Artwork Order, NIS Mission etc.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableEnhancedLookup>true</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <fieldSets>
+        <fullName>External_Reference_Commons</fullName>
+        <description>Query using field set</description>
+        <displayedFields>
+            <field>Id</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Name</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Mission_ID__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Record_Type_Name__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Project__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>SubProject__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>External Reference Commons</label>
+    </fieldSets>
+    <fields>
+        <fullName>External_Entity_Name__c</fullName>
+        <description>Display Record Type Name and external entity record name</description>
+        <externalId>false</externalId>
+        <formula>CASE(RecordType.DeveloperName,
+&apos;FO&apos;, LAO_ID__r.Name,
+&apos;NIS&apos;, RecordType.DeveloperName+&apos; - &apos;+Mission_ID__c,
+&apos;&apos;)</formula>
+        <label>External Entity Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>LAO_ID__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Lookup to the LAO Object</description>
+        <externalId>false</externalId>
+        <label>FO ID</label>
+        <referenceTo>Laser_Artwork_Order__c</referenceTo>
+        <relationshipLabel>SubProject External References</relationshipLabel>
+        <relationshipName>SubProject_External_References</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Mission_ID__c</fullName>
+        <description>Used for capturing NIS Mission ID</description>
+        <externalId>false</externalId>
+        <label>Mission ID</label>
+        <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Project__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Project (Pilot)</label>
+        <referenceTo>Project__c</referenceTo>
+        <relationshipLabel>SubProject External References</relationshipLabel>
+        <relationshipName>SubProject_External_References</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Record_Type_Name__c</fullName>
+        <description>Record Type Name to be used for scheduled job handler</description>
+        <externalId>false</externalId>
+        <formula>RecordType.Name</formula>
+        <label>Record Type Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SubProject__c</fullName>
+        <externalId>false</externalId>
+        <label>SubProject</label>
+        <referenceTo>SubProject__c</referenceTo>
+        <relationshipLabel>SubProject External References</relationshipLabel>
+        <relationshipName>SubProject_External_References</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <description>Mirrors the value of the Record Type field.  It’s existence is to support lookup dialogs, since record type fields can’t be searched within a lookup dialog.  Populated by workflow to match the record type of the record.</description>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <length>30</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>SubProject External Reference</label>
+    <nameField>
+        <displayFormat>SPER-{0000000}</displayFormat>
+        <label>External Reference ID</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>SubProject External References</pluralLabel>
+    <recordTypes>
+        <fullName>FO</fullName>
+        <active>true</active>
+        <description>Forms Order (a.k.a Laser Artwork Order)</description>
+        <label>FO</label>
+    </recordTypes>
+    <recordTypes>
+        <fullName>NIS</fullName>
+        <active>true</active>
+        <description>NIS record type</description>
+        <label>NIS</label>
+    </recordTypes>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+    <webLinks>
+        <fullName>Call_Batch_to_Update</fullName>
+        <availability>online</availability>
+        <description>temporary button which calls the batch class to test the dates from Laser to Project milestone</description>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Call Batch to Update</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/32.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/32.0/apex.js&quot;)}
+
+
+sforce.apex.execute(&quot;IMPLAO_CallBatchfromButton_Temporary&quot;,&quot;callBatchfromButton&quot;,{});
+
+alert(&apos;Records will be updated with in 2-5 minutes&apos;);</url>
+    </webLinks>
+</CustomObject>

@@ -1,0 +1,15 @@
+<apex:page showHeader="false" sidebar="false" StandardStylesheets="false" >
+    <form onsubmit="search();">
+        <h2>Search Chatter Communities</h2>
+        <input type="text" id="searchtext" />
+        <script type="text/javascript">
+        function search() {
+            var searchlink = document.getElementById('searchlink');
+            searchlink.href = "/Employees/_ui/search/ui/UnifiedSearchResults?searchType=2&initialViewMode=feeds&str="+escape(document.getElementById("searchtext").value);
+            //searchlink.click();
+        }
+        </script>
+        <a href="#" id="searchlink" class="hide"></a>
+        <button type="submit" class="btn btn-info">Search</button>
+    </form>
+</apex:page>

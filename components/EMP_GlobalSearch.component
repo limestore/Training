@@ -1,0 +1,52 @@
+<apex:component >
+    <!--Author: Anirudh Singh-->
+    <!--Description: This page is used to perform search and display results for Content Documents on communities.-->
+    <!--Created Date: 2015-08-21-->
+    <apex:attribute name="communityName" id="communityName" type="String" description="This attribute is to hold the community name."/>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, 'css/bootstrap.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.EMP_GlobalSearch_CSS)}"/>
+    
+    <script type="text/javascript">
+        function search()
+        {
+            if(document.getElementById('searchText').value!='' && document.getElementById('searchText').value!=null 
+               && document.getElementById('searchText').value.length>=2)
+            {
+                document.getElementById('errMessage').style.display="none";
+                var salesforceBaseURL=location.protocol+"//"+location.hostname+(location.port && ":"+location.port)+"/";
+                var url=salesforceBaseURL;
+                if(document.getElementById('communityName').value!=null && document.getElementById('communityName').value!='')
+                {
+                    url+=document.getElementById('communityName').value+'/';
+                }
+                url+='_ui/search/ui/UnifiedSearchResults?searchType=2';
+                
+                //This is to perform search only on Files.
+                url+='&sen=068';
+                url+='&str='+document.getElementById('searchText').value;
+                window.location=url;
+            }
+            else
+            {
+                document.getElementById('errMessage').innerHTML='Please enter atleast 2 characters and search.';
+                document.getElementById('errMessage').style.display="";
+            }
+        }
+    </script>
+    
+    <input type="hidden" value="{!communityName}" id="communityName"/>
+    <form class="bs-example bs-example-form" data-example-id="input-group-with-button">
+        <div class="row">
+            <div class="col-lg-6" id="outerDiv">
+                <div class="input-group">
+                    <input maxlength="100" size="20" type="text" class="form-control" placeholder="Search..." id="searchText"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" id="searchButton" onclick="search();">Search</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div id="errMessage" style="display: none;"/>
+    </form>
+</apex:component>

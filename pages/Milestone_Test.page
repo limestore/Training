@@ -1,0 +1,51 @@
+<apex:page controller="IMP_SubProjectManagement_Extension" >
+    
+    <apex:stylesheet value="{!URLFOR($Resource.BootStrapTabOnly, 'css/bootstrap.css')}" /> 
+    <apex:includeScript value="{!URLFOR($Resource.jquery_1_11_3_min)}" />
+    <apex:includeScript value="{!URLFOR($Resource.BootStrapTabOnly, 'js/bootstrap.min.js')}" /> 
+    <style>
+        /* .RLPanelShadow style Added by vishal.bandari@cdk.com as per RQ-04873*/
+        .RLPanelShadow
+        {
+            left:20px !important;
+        }
+    </style>
+        <!-- Chatter feed section -->
+    <chatter:feedWithFollowers entityId="{!subproject.Id}" /><br/>
+    
+    <!-- Hyperlink to redirect back to Project -->
+    <apex:outputLink value="/{!subProject.Project__c}">Back</apex:outputLink>
+    <br/><br/>   
+    <!-- Tabs placeholder -->
+    
+    <div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active"><a data-toggle="tab" href="#Details">Details</a></li>           
+            <li><a data-toggle="tab" href="#Milestone">Milestone</a></li>
+            <li><a data-toggle="tab" href="#Contract">Contract Lines</a></li>
+            <li ><a data-toggle="tab" href="#Discovery">Discovery</a></li>
+        </ul>
+        <div class="tab-content">
+            <div  class="tab-pane active" id="Details">
+                <apex:detail subject="{!subProject.Id}" relatedList="true" inlineEdit="true"/> 
+            </div>
+            <div class="tab-pane " id="Milestone">
+                <div style="padding-top:10px">
+                      <c:IMP_Milestone_Angular ></c:IMP_Milestone_Angular>
+                </div>
+            </div>
+            <div class="tab-pane" id="Contract">
+                <div style="padding-top:10px">
+                    <apex:CanvasApp width="100%" maxWidth="100%" scrolling="yes" developerName="IMP_IMPACT_Subproject_CDFLines" parameters="{!parameterString}" />     
+                </div>
+            </div>
+            <div class="tab-pane" id="Discovery">
+                <div style="padding-top:10px">
+                    <apex:include pageName="IMP_SiteWorkbook"  />
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</apex:page>

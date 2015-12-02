@@ -1,0 +1,34 @@
+<apex:page >
+    <!--<apex:includeScript value="/soap/ajax/34.0/connection.js" />-->
+    <apex:includeScript value="/soap/ajax/29.0/connection.js" />
+    
+    <script type="text/javascript">
+    /* var profileName = '{!$Profile.Name}';
+    var recordId = '{!$CurrentPage.Parameters.id}';
+    var prefix = recordId.substring(0,3);
+    sforce.connection.sessionId = "{!GETSESSIONID()}";
+    var vip_check;
+    if( prefix == 'a1M' || prefix == '001' || prefix == '500' )
+    {
+        if( prefix == 'a1M' )
+        {
+            var queryResult = sforce.connection.query("SELECT VIP__c FROM WebId__c User WHERE Id = '"+recordId+"'");
+        }
+        else if( prefix == '001' )
+        {
+            var queryResult = sforce.connection.query("SELECT VIP__c FROM Account User WHERE Id = '"+recordId+"'");
+        }
+        else if( prefix == '500' )
+        {
+            var queryResult = sforce.connection.query("SELECT VIP__c FROM Case User WHERE Id = '"+recordId+"'");
+        }
+        queryRecords = queryResult.getArray('records');
+        vip_check = queryRecords[0].get('VIP__c');
+        if(vip_check == 'true')
+        {
+        	alert('VIP field is checked');
+        }
+        
+    }  */
+    </script>
+</apex:page>

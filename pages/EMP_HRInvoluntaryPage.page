@@ -1,0 +1,17 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false">    
+    <apex:stylesheet value="{!URLFOR($Resource.EMP_Portal_Content_css)}"/>
+    <div id="wrapper-body">        
+        <div id="container" align="center" style="min-height:700px;">            
+            <div id="content" >
+                <div class="col span_3_of_3_MultiRow assoc-portal" >   
+                    <div class="span_3_of_3_MultiRow_Content">
+                        <ul>
+                                <li><apex:outputlink value="/apex/EMP_HRInvoluntaryTermination" target="_Blank">Involuntary Termination Form</apex:outputlink></li>
+                                <li><apex:outputLink value="http://adpdsportal.ds.ad.adp.com/DSHRResourceCenter/default.aspx">HR Resource Center (Sharepoint)</apex:outputLink> </li>
+                        </ul>
+                        </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</apex:page>

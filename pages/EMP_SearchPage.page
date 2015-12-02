@@ -1,0 +1,6 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false">
+    <!--Author: Anirudh Singh-->
+    <!--Description: This page is used to perform search and display results for Content Documents.-->
+    <!--Created Date: 2015-08-20-->
+    <c:EMP_GlobalSearch communityName=""/>
+</apex:page>

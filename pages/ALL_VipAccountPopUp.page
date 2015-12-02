@@ -1,0 +1,53 @@
+<apex:page standardController="Account" tabStyle="Account">
+    
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.7.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.20.custom.min.js')}" />
+    
+    <apex:includeScript value="{!URLFOR($Resource.jQueryDataTables_v194, 'media/js/jquery.dataTables.js')}" />
+    <!--Author: Anirudh Singh-->
+    <!--Description: This page is used to override Account Detail Page and Account Hierarchy functionality.-->
+    <!--Created Date: 2015-07-28-->
+    <script>
+     window.document.onload = new function(e)
+    {
+        // add JS libraries
+        
+        
+        jQuery('head').append('<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/redmond/jquery-ui.css" type="text/css" />');
+        
+        
+        var AccessGranted = false;
+        
+        var noAccessMessage = "Your profile does not have access to the Case cloning application. ";
+        var onlyOpenCasesMessage = "";
+        
+        var massCloneDialogOptions = {
+            autoOpen : false,
+            title : "VIP Account",
+            width : 500,
+            modal : true,
+            buttons : {
+                "Okay, Cool!" : function () {
+                    jQuery(this).dialog("close");
+                }
+            }
+        };
+        
+        jQuery(function () {
+            var massCloneDialog = jQuery("<div>").attr("id", "massCloneDialog");
+            if (!jQuery('#massCloneDialog').size()) {
+                jQuery('body').append(massCloneDialog);
+            }
+            
+            
+            massCloneDialog.html(onlyOpenCasesMessage).dialog(massCloneDialogOptions);
+            massCloneDialog.dialog("open");
+            //return false;
+            
+        });
+        
+    }
+    </script>
+    
+    <apex:detail inlineEdit="true"/>
+</apex:page>

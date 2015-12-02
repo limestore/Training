@@ -1,0 +1,215 @@
+<apex:component controller="IMP_MiletoneView_V2_Controller" allowDML="true">
+    <apex:includeScript value="{!URLFOR($Resource.angular_min)}"/>
+    <apex:includeScript value="{!URLFOR($Resource.angular_ui_router_min)}"/>
+    <apex:includeScript value="{!URLFOR($Resource.IMP_Milestone_Angular)}"/>
+    <apex:includeScript value="{!URLFOR($Resource.All_Utilities_SR,'/All_Utilities.js')}" /> 
+    <apex:stylesheet value="{!URLFOR($Resource.IMP_Milestone_css_v2)}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.Milestone_angular_css,'img/CollapsibleTable.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.IMP_Project_css)}"/>
+    <script type="text/javascript">
+    var __sfdcSessionId = '{!GETSESSIONID()}';
+    </script>
+    <script src="../../soap/ajax/35.0/connection.js" type="text/javascript">
+    </script>
+    <style>
+        .remove_border {
+        background-color: white !important;
+        }
+        
+    </style>
+    <div ng-app="myApp">
+         
+        <div ng-controller="setupPage" >    
+            <div class="waitingSearchDiv outerGrayedPanel" id="casActionProcessing" ng-show="showLoadingScreen"> 
+                <div class="waitingHolder innerProcessPanel"> 
+                    <br /> 
+                    <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />    
+                    <span class="waitingDescription">Loading...</span> 
+                </div> 
+            </div>
+            
+            <div ng-show="errorMsgList && errorMsgList.length > 0" class="message errorM3">
+                <img alt="ERROR" class="msgIcon" src="/s.gif" title="ERROR" style="float:left" />
+                <ul style="margin:0 0 0 15px;padding:0">
+                    <li style="font-weight: bold;color: #cc0000;list-style-type: none;font-size:13px">Error/s:</li>
+                    <li ng-repeat="msg in errorMsgList track by $index" style="list-style-type: none;">
+                        {{msg}}
+                    </li>
+                </ul>
+            </div>         
+            <div style="margin-bottom:10px;text-align:center">
+                <input type="button" ng-click="toggleAllRecord(true)" value="Expand All" class="btn " ng-show="showExpand" />
+                <input type="button" ng-click="toggleAllRecord(false)" value="Collapse All" class="btn " ng-show="!showExpand"  />
+                <div ng-if="permission.add" style="display:inline">
+                    <input type="button" ng-click="showWindowPop('/apex/IMP_AddMilestones','&type=standard',800,600)" value="Add Standard Milestone" class="btn "  />
+                    <input type="button" value="Add Product Milestone" ng-click="showWindowPop('/apex/IMP_AddMilestones','&type=product',800,600)" class="btn "  />  
+                    <input type="button" value="Add Non-Standard Milestone" ng-click="showWindowPop('/apex/IMP_MilestonePopup','&standard=product',800,600)" class="btn " />
+                    <input type="button" ng-click="UpdateDisplayPSR(true)" value="Select All Records for PSR" class="btn "  />
+                    <input type="button" ng-click="UpdateDisplayPSR(false)" value="Deselect All Records for PSR" class="btn "  />
+                </div>
+                <input ng-if="permission.edit" type="button" value="Edit" ng-click="goToEditPage()" class="btn "   />  
+                <input ng-if="permission.delete" type="button" ng-click="deleteMilestone()" value="Delete" class="btn "  />
+                <input type="button" ng-click="refresh()" value="Refresh" class="btn "  />
+            </div>
+          
+            <table class="mainTable">
+                <tbody ng-repeat="(mIndex,milestone) in Subprojects track by $index">
+                    <tr ng-if="milestone.section == 'Milestone'" class="header_tr">
+                        <td class="remove_border" ></td>
+                        <td ng-if="permission.delete" class="milestone_border"></td>
+                        <td colspan="{{(permission.delete ? 4 : 5)}}" class="{{(permission.delete ? '' : 'milestone_border')}}">Milestone Description</td>                        
+                        <td>Process Step</td>
+                        <td>Site</td>
+                        <td >Risk Gauge</td>
+                        <td>Status</td>
+                        <td >Planned Start Date</td>
+                        <td >Planned End Date</td>
+                        <td >Actual Start Date</td>
+                        <td>Actual End Date</td>
+                        <td >External System Name</td>
+                        <td >Comments</td>
+                        <td>Sequence</td>
+                        <td ng-show="expand.Child"></td>
+                        <td ng-show="expand.Child"></td>
+                        <td ng-show="expand.Child"></td>
+                        <td ng-show="expand.Child"></td>
+                        <td ng-show="expand.GrandChild"></td>
+                        <td ng-show="expand.GrandChild"></td>
+                        <td ng-show="expand.GrandChild"></td>
+                    </tr>
+                    <tr ng-if="milestone.section == 'Milestone'" class="parent_content_tr dataRow {{(milestone.hasError ? 'errorClass' : '')}}">                            
+                        <td class="remove_border toggle_cell">
+                            <input type="checkbox" ng-model="milestone.expandChild" id="milestone-{{mIndex}}" class="check_box" ng-change="toggleRecord(milestone,'Activity')"/><label for="milestone-{{mIndex}}">&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        </td>
+                        <td ng-if="permission.delete" class="milestone_border"><input type="checkbox" ng-model="milestone.toDelete" ng-change="disableCheckbox('Milestone',milestone.toDelete)" ng-disabled="disable.Milestone"/></td>
+                        <td class="milestone_description {{(permission.delete ? '' : 'milestone_border')}}" colspan="{{(permission.delete ? 4 : 5)}}">{{milestone.obj.Description__c}}</td>
+                        <td>{{milestone.obj.Process_Step__c}}</td>
+                        <td >{{milestone.obj.Account__c}}</td>
+                        <td >RISK</td>
+                        <td class="{{milestone.obj.Status__c + 'Font'}} ">{{milestone.obj.Status__c}}</td>
+                        <td >{{milestone.obj.Planned_Start_Date__c | date:'MM/dd/yyyy'}}</td>
+                        <td >{{milestone.obj.Planned_End_Date__c | date:'MM/dd/yyyy'}}</td>
+                        <td >{{milestone.obj.Actual_Start_Date__c | date:'MM/dd/yyyy'}}</td>
+                        <td>{{milestone.obj.Actual_End_Date_Final__c | date:'MM/dd/yyyy'}}</td>
+                        <td>{{milestone.obj.External_System_Name__c}}</td>
+                        <td>{{milestone.obj.Comments__c}}</td>
+                        <td>{{milestone.obj.Sort_Sequence__c}}</td>  
+                        <td ng-show="expand.Child"></td>
+                        <td ng-show="expand.Child"></td>
+                        <td ng-show="expand.Child"></td>
+                        <td ng-show="expand.Child"></td>
+                        <td ng-show="expand.GrandChild"></td>
+                        <td ng-show="expand.GrandChild"></td>
+                        <td ng-show="expand.GrandChild"></td>
+                    </tr>
+                    <tr ng-if="milestone.section == 'Activity'" class="child_header_tr dataRow" ng-show="milestone.expandChild">
+                        <td class="remove_border"></td>
+                        <td class="remove_border {{(permission.delete ? '' : 'resizeActivityColumn')}}"></td>
+                        <td ng-if="permission.delete" class="activity_border"></td>
+                        <td colspan="{{(permission.delete ? 5 : 6)}}" class="{{(permission.delete ? '' : 'activity_border resizeActivityColumn')}}">Activity Description</td>
+                        <td>Risk Gauge</td>
+                        <td>Status</td>
+                        <td>Planned Start Date</td>
+                        <td>Planned End Date</td>
+                        <td>Actual Start Date</td>
+                        <td>Actual End Date</td>
+                        <td >CDK Assignee</td>
+                        <td >CDK Assignee Role</td>
+                        <td >Client Assignee</td>
+                        <td >Department</td>
+                        <td >Display on PSR</td>
+                        <td >Comments</td>
+                        <td >Sequence</td>
+                        <td ng-show="expand.GrandChild"></td>
+                        <td ng-show="expand.GrandChild"></td>
+                        <td ng-show="expand.GrandChild"></td>
+                    </tr>
+                    <tr ng-if="milestone.section == 'Activity'"  class="child_content_tr dataRow {{(milestone.hasError ? 'errorClass' : '')}}" ng-show="milestone.expandChild">
+                        <td class="remove_border"></td>
+                        <td class="remove_border toggle_cell {{(permission.delete ? '' : 'resizeActivityColumn')}}"><input type="checkbox" ng-model="milestone.expandGrandChild" id="act-{{mIndex}}" class="check_box" ng-change="toggleRecord(milestone,'Task')"/><label for="act-{{mIndex}}">&nbsp;&nbsp;&nbsp;&nbsp;</label></td>
+                        <td ng-if="permission.delete" class="activity_border"><input type="checkbox" ng-model="milestone.toDelete" ng-change="disableCheckbox('Activity',milestone.toDelete)" ng-disabled="disable.Activity"/></td>
+                        <td colspan="{{(permission.delete ? 5 : 6)}}" class="{{(permission.delete ? '' : 'activity_border resizeActivityColumn')}}">{{milestone.obj.Description__c}}</td>
+                        <td >RISK</td>
+                        <td class="{{milestone.obj.Status__c + 'Font'}} ">{{milestone.obj.Status__c}}</td>
+                        <td >{{milestone.obj.Planned_Start_Date__c | date:'MM/dd/yyyy'}}</td>
+                        <td >{{milestone.obj.Planned_End_Date__c | date:'MM/dd/yyyy'}}</td>
+                        <td >{{milestone.obj.Actual_Start_Date__c | date:'MM/dd/yyyy'}}</td>
+                        <td >{{milestone.obj.Actual_End_Date_Final__c | date:'MM/dd/yyyy'}}</td>
+                        <td >{{milestone.obj.CDK_Assignee__r.Name}}</td>
+                        <td >{{milestone.obj.CDK_Assignee_Role__c}}</td>
+                        <td >{{milestone.obj.Client_Assignee__r.Name}}</td>
+                        <td >{{milestone.obj.Department__c}}</td>
+                        <td > <img src="{{(milestone.obj.Display_on_PSR__c ? '/img/checkbox_checked.gif' : '/img/checkbox_unchecked.gif')}}" alt="PSR" width="21" height="16" 
+                                   class="checkImg" title="PSR" /></td>
+                        <td >{{milestone.obj.Comments__c}}</td>
+                        <td >{{milestone.obj.Sequence__c}}</td>
+                        <td ng-show="expand.GrandChild"></td>
+                        <td ng-show="expand.GrandChild"></td>
+                        <td ng-show="expand.GrandChild"></td>
+                    </tr>
+                    <tr ng-if="milestone.section == 'Task' && milestone.createHeader" class="grandChild_header_tr dataRow " ng-show="milestone.expandGrandChild">
+                        <td class="remove_border" ></td>
+                        <td class="remove_border" ></td>
+                        <td class="remove_border {{(permission.delete ? '' : 'resizeActivityColumn')}}" ></td>
+                        <td ng-if="permission.delete" class="task_border"></td>
+                        <td colspan="{{(permission.delete ? 5 : 6)}}" class="{{(permission.delete ? '' : 'task_border resizeActivityColumn')}}">Task Description</td>
+                        <td >Status</td>
+                        <td >Planned Start Date</td>
+                        <td >Planned End Date</td>
+                        <td >Actual Start Date</td>
+                        <td >Actual End Date</td>
+                        <td >CDK Assignee</td>
+                        <td >CDK Assignee Role</td>
+                        <td >Client Assignee</td>
+                        <td >Actual Days Spent</td>
+                        <td >Migration Status</td>
+                        <td >Not Applicable Reason</td>
+                        <td >Reason Missed Planned End Date</td>
+                        <td >Expected Days Spent</td>
+                        <td >Comments</td>
+                        <td >Sequence</td>
+                    </tr>
+                    <tr ng-if="milestone.section == 'Task'" class="grandChild_content_tr dataRow {{(milestone.hasError ? 'errorClass' : '')}}" ng-show="milestone.expandGrandChild">
+                        <td class="remove_border" ></td>
+                        <td class="remove_border" ></td>
+                        <td class="remove_border {{(permission.delete ? '' : 'resizeActivityColumn')}}" ></td>
+                        <td ng-if="permission.delete" class="task_border"><input type="checkbox" ng-model="milestone.toDelete" ng-change="disableCheckbox('Task',milestone.toDelete)" ng-disabled="disable.Task"/></td>
+                        <td colspan="{{(permission.delete ? 5 : 6)}}" class="{{(permission.delete ? '' : 'task_border resizeActivityColumn')}}">{{milestone.obj.Description__c}}</td>
+                        <td class="{{milestone.obj.Status__c + 'Font'}} ">{{milestone.obj.Status__c}}</td>
+                        <td >{{milestone.obj.Planned_Start_Date__c | date:'MM/dd/yyyy'}}</td>
+                        <td >{{milestone.obj.Planned_End_Date__c | date:'MM/dd/yyyy'}}</td>
+                        <td >{{milestone.obj.Actual_Start_Date__c | date:'MM/dd/yyyy'}}</td>
+                        <td >{{milestone.obj.Actual_End_Date__c | date:'MM/dd/yyyy'}}</td>
+                        <td >{{milestone.obj.CDK_Assignee__r.Name}}</td>
+                        <td >{{milestone.obj.CDK_Assignee_Role__c}}</td>
+                        <td >{{milestone.obj.Client_Assignee__r.Name}}</td>
+                        <td >{{milestone.obj.Actual_Time_Spent__c}}</td>
+                        <td >{{milestone.obj.Migration_Status__c}}</td>
+                        <td >{{milestone.obj.Reason__c}}</td>
+                        <td >{{milestone.obj.Reason_Missed_Planned_End_Date__c}}</td>
+                        <td >{{milestone.obj.Expected_Time_Spent__c}}</td>
+                        <td >{{milestone.obj.Comments__c}}</td>
+                        <td >{{milestone.obj.Sequence__c}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top:10px;text-align:center">
+                <input type="button" ng-click="toggleAllRecord(true)" value="Expand All" class="btn " ng-show="showExpand" />
+                <input type="button" ng-click="toggleAllRecord(false)" value="Collapse All" class="btn " ng-show="!showExpand"  />
+                <div ng-if="permission.add" style="display:inline">
+                    <input type="button" ng-click="showWindowPop('/apex/IMP_AddMilestones','&type=standard',800,600)" value="Add Standard Milestone" class="btn "  />
+                    <input type="button" value="Add Product Milestone" ng-click="showWindowPop('/apex/IMP_AddMilestones','&type=product',800,600)" class="btn "  />  
+                    <input type="button" value="Add Non-Standard Milestone" ng-click="showWindowPop('/apex/IMP_MilestonePopup','&standard=product',800,600)" class="btn " />
+                    <input type="button" ng-click="UpdateDisplayPSR(true)" value="Select All Records for PSR" class="btn "  />
+                    <input type="button" ng-click="UpdateDisplayPSR(false)" value="Deselect All Records for PSR" class="btn "  />
+                </div>
+                <input ng-if="permission.edit" type="button" value="Edit" ng-click="goToEditPage()" class="btn "   />  
+                <input ng-if="permission.delete" type="button" ng-click="deleteMilestone()" value="Delete" class="btn "  />
+                <input type="button" ng-click="refresh()" value="Refresh" class="btn "  />
+            </div>
+            
+        </div>  
+    </div>
+  
+</apex:component>
